@@ -39,7 +39,7 @@
                 "max_iterations": 800
             },
             "output_control": "simulationtime",
-            "output_value": 1.9999999,
+            "output_value": 0.09999999,
         },
         "scalar": {
             "enabled": true,
@@ -52,7 +52,14 @@
             ],
             "initial_condition": {
                 "type": "user"
-            }
+            },
+            "solver": {
+                "type": "cg",
+                "preconditioner": "jacobi",
+                "projection_space_size": 0,
+                "absolute_tolerance": 1e-9,
+                "max_iterations": 800
+            },
         }
     }
 }
