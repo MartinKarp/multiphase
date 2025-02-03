@@ -1,0 +1,21 @@
+#!/bin/bash
+declare -A eps
+#nel, eps, deltat
+eps[20]="0.01 0.001"
+eps[40]="0.005 0.0005"
+eps[80]="0.0025 0.00025"
+
+for item in "${!eps[@]}"; 
+do
+    declare -a eps_dt=(${eps[$item]})
+    sed -e "s/0.01/${eps_dt[0]}/g" template.case > run.case
+    sed -i -e "s/0.001/${eps_dt[1]}/g" run.case
+    sed -i -e "s/20/${item}/g" run.case 
+    /cfs/klemming/projects/supr/kthmech/makarp/multiphase/neko_cpu_install/bin/genmeshbox 0 1 0 1 -0.1 0.1  $item $item 1 .true. .true. .true.
+    mv box.nmsh $item.nmsh
+    rm genmeshbox*
+    echo 'running nel =' $item
+    mkdir nel_$item
+    srun -n 128  ./neko run.case > log_$item
+    echo 'done nel =' $item
+done
